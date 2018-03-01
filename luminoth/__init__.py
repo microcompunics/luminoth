@@ -13,4 +13,4 @@ __copyright__ = 'Copyright (c) 2018 Tryolabs S.A.'
 
 # Import functions that are part of Luminoth's public interface.
 from luminoth.cli import cli  # noqa
-from luminoth.utils.predicting import PredictorNetwork  # noqa
+from luminoth.utils.predictor_network import PredictorNetwork  # noqa

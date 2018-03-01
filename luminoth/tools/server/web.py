@@ -7,7 +7,7 @@ from PIL import Image
 
 from luminoth.tools.checkpoint import get_checkpoint_config
 from luminoth.utils.config import get_config, override_config_params
-from luminoth.utils.predicting import PredictorNetwork
+from luminoth.utils.predictor_network import PredictorNetwork
 
 
 app = Flask(__name__)

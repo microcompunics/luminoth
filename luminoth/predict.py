@@ -1,6 +1,7 @@
 import numpy as np
 
 import click
+import time
 import json
 import os
 import skvideo.io
@@ -9,7 +10,7 @@ import tensorflow as tf
 from PIL import Image, ImageDraw
 from luminoth.tools.checkpoint import get_checkpoint_config
 from luminoth.utils.config import get_config, override_config_params
-from luminoth.utils.predicting import PredictorNetwork
+from luminoth.utils.predictor_network import PredictorNetwork
 
 IMAGE_FORMATS = ['jpg', 'jpeg', 'png']
 VIDEO_FORMATS = ['mov', 'mp4', 'avi']  # TODO: check if more formats work
@@ -141,6 +142,7 @@ def predict(path_or_dir, config_files, checkpoint, override_params, output_dir,
                 label='Predicting {}'.format(file_path))
             with video_progress_bar as bar:
                 try:
+                    tic = time.time()
                     for frame in bar:
                         # Run image through network
                         prediction = network.predict_image(frame)
@@ -153,8 +155,10 @@ def predict(path_or_dir, config_files, checkpoint, override_params, output_dir,
                         image = Image.fromarray(frame)
                         draw_bboxes_on_image(image, prediction, min_prob)
                         writer.writeFrame(np.array(image))
+                    toc = time.time()
+                    click.echo('fps: {0:.1f}'.format(bar.length / (toc - tic)))
                 except RuntimeError as e:
-                    click.echo()  # Error prints next to progress-bar if not
+                    click.echo()  # or error would print next to progress-bar
                     tf.logging.error('Error: {}'.format(e))
                     tf.logging.error('Corrupt videofile: {}'.format(file_path))
                     tf.logging.error(
