@@ -56,10 +56,11 @@ def eval(dataset_split, config_files, watch, from_global_step,
     # Only a single run over the dataset to calculate metrics.
     config.train.num_epochs = 1
 
-    if config.model.network.with_rcnn:
-        config.model.rcnn.proposals.min_prob_threshold = min_probability
-    else:
-        config.model.rpn.proposals.min_prob_threshold = min_probability
+    if config.model.type == 'fasterrcnn':
+        if config.model.network.with_rcnn:
+            config.model.rcnn.proposals.min_prob_threshold = min_probability
+        else:
+            config.model.rpn.proposals.min_prob_threshold = min_probability
 
     # Seed setup
     if config.train.seed:
